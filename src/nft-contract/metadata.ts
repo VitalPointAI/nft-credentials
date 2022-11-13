@@ -106,27 +106,22 @@ export class Token {
     owner_id: string;
     approved_account_ids: { [accountId: string]: number };
     next_approval_id: number;
-    royalty: { [accountId: string]: number };
 
     constructor({ 
         ownerId, 
         approvedAccountIds, 
-        nextApprovalId, 
-        royalty 
+        nextApprovalId
     }:{ 
         ownerId: string, 
         approvedAccountIds: { [accountId: string]: number }, 
-        nextApprovalId: number, 
-        royalty: { [accountId: string]: number } 
+        nextApprovalId: number
     }) {
         //owner of the token
         this.owner_id = ownerId,
         //list of approved account IDs that have access to transfer the token. This maps an account ID to an approval ID
         this.approved_account_ids = approvedAccountIds,
         //the next approval ID to give out. 
-        this.next_approval_id = nextApprovalId,
-        //keep track of the royalty percentages for the token in a hash map
-        this.royalty = royalty
+        this.next_approval_id = nextApprovalId
     }
 }
 
@@ -136,20 +131,17 @@ export class JsonToken {
     owner_id: string;
     metadata: TokenMetadata;
     approved_account_ids: { [accountId: string]: number };
-    royalty: { [accountId: string]: number };
 
     constructor({ 
         tokenId, 
         ownerId, 
         metadata, 
-        approvedAccountIds, 
-        royalty 
+        approvedAccountIds
     }:{
         tokenId: string,
         ownerId: string,
         metadata: TokenMetadata,
-        approvedAccountIds: { [accountId: string]: number },
-        royalty: { [accountId: string]: number }
+        approvedAccountIds: { [accountId: string]: number }
     }) {
         //token ID
         this.token_id = tokenId,
@@ -158,9 +150,7 @@ export class JsonToken {
         //token metadata
         this.metadata = metadata,
         //list of approved account IDs that have access to transfer the token. This maps an account ID to an approval ID
-        this.approved_account_ids = approvedAccountIds,
-        //keep track of the royalty percentages for the token in a hash map
-        this.royalty = royalty
+        this.approved_account_ids = approvedAccountIds
     }
 }
 

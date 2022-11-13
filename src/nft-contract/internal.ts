@@ -7,12 +7,7 @@ export function restoreOwners(collection) {
     if (collection == null) {
         return null;
     }
-    return UnorderedSet.deserialize(collection as UnorderedSet);
-}
-
-//convert the royalty percentage and amount to pay into a payout (U128)
-export function royaltyToPayout(royaltyPercentage: number, amountToPay: bigint): string {
-    return (BigInt(royaltyPercentage) * BigInt(amountToPay) / BigInt(10000)).toString();
+   return collection
 }
 
 //refund the storage taken up by passed in approved account IDs and send the funds to the passed in account ID. 
@@ -96,7 +91,7 @@ export function internalRemoveTokenFromOwner(contract: Contract, accountId: stri
     let tokenSet = restoreOwners(contract.tokensPerOwner.get(accountId));
     //if there is no set of tokens for the owner, we panic with the following message:
     if (tokenSet == null) {
-        near.panic("Token should be owned by the sender");
+        throw Error("Token should be owned by the sender");
     }
 
     //we remove the the token_id from the set of tokens
@@ -115,14 +110,14 @@ export function internalTransfer(contract: Contract, senderId: string, receiverI
     //get the token object by passing in the token_id
     let token = contract.tokensById.get(tokenId) as Token;
     if (token == null) {
-        near.panic("no token found");
+        throw Error("no token found");
     }
 
     //if the sender doesn't equal the owner, we check if the sender is in the approval list
     if (senderId != token.owner_id) {
         //if the token's approved account IDs doesn't contain the sender, we panic
         if (!token.approved_account_ids.hasOwnProperty(senderId)) {
-            near.panic("Unauthorized");
+            throw Error("Unauthorized");
         }
 
         // If they included an approval_id, check if the sender's actual approval_id is the same as the one included
@@ -131,7 +126,7 @@ export function internalTransfer(contract: Contract, senderId: string, receiverI
             let actualApprovalId = token.approved_account_ids[senderId];
             //if the sender isn't in the map, we panic
             if (actualApprovalId == null) {
-                near.panic("Sender is not approved account");
+                throw Error("Sender is not approved account");
             }
 
             //make sure that the actual approval ID is the same as the one provided
@@ -152,9 +147,7 @@ export function internalTransfer(contract: Contract, senderId: string, receiverI
         ownerId: receiverId,
         //reset the approval account IDs
         approvedAccountIds: {},
-        nextApprovalId: token.next_approval_id,
-        //we copy over the royalties from the previous token
-        royalty: token.royalty,
+        nextApprovalId: token.next_approval_id
     });
 
     //insert that new token into the tokens_by_id, replacing the old entry 

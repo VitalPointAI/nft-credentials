@@ -27,7 +27,7 @@ export function internalNftApprove({
     //get the token object from the token ID
     let token = contract.tokensById.get(tokenId) as Token;
     if (token == null) {
-        near.panic("no token");
+        throw Error("no token");
     }
     //make sure that the person calling the function is the owner of the token
     assert(near.predecessorAccountId() === token.owner_id, "Predecessor must be the token owner");
@@ -87,7 +87,7 @@ export function internalNftIsApproved({
     //get the token object from the token_id
     let token = contract.tokensById.get(tokenId) as Token;
     if (token == null) {
-        near.panic("no token");
+        throw Error("no token");
     }
 
     //get the approval number for the passed in account ID
@@ -125,7 +125,7 @@ export function internalNftRevoke({
     //get the token object using the passed in token_id
     let token = contract.tokensById.get(tokenId) as Token;
     if (token == null) {
-        near.panic("no token");
+        throw Error("no token");
     }
 
     //get the caller of the function and assert that they are the owner of the token
@@ -158,7 +158,7 @@ export function internalNftRevokeAll({
     //get the token object from the passed in token ID
     let token = contract.tokensById.get(tokenId) as Token;
     if (token == null) {
-        near.panic("no token");
+        throw Error("no token");
     }
 
     //get the caller and make sure they are the owner of the tokens
